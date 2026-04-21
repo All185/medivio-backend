@@ -4,7 +4,8 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
-        extra="ignore"
+        extra="ignore",
+        case_sensitive=True
     )
 
     # Supabase
@@ -31,9 +32,6 @@ class Settings(BaseSettings):
     # App
     APP_ENV: str = "development"
     CORS_ORIGINS: list[str] = ["http://localhost:3000"]
-
-    class Config:
-        case_sensitive = True
 
 
 settings = Settings()
