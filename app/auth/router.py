@@ -10,6 +10,7 @@ from app.auth.dependencies import get_current_user
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 # Client Supabase avec la clé service (admin) — jamais exposée au front
+print("DEBUG SUPABASE_URL:", os.environ.get("SUPABASE_URL", "NOT FOUND"))
 supabase: Client = create_client(
     os.environ.get("SUPABASE_URL", ""),
     os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
