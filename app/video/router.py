@@ -5,6 +5,7 @@ from app.auth.dependencies import get_current_user
 from app.video.models import RoomCreate, RoomOut
 import httpx
 from datetime import datetime, timedelta
+import os 
 
 router = APIRouter(prefix="/video", tags=["video"])
 
