@@ -7,6 +7,9 @@ from app.video.router import router as video_router
 from app.payments.router import router as payments_router
 from app.triage.router import router as triage_router
 from app.records.router import router as records_router
+import os
+print("DEBUG SUPABASE_URL:", os.environ.get("SUPABASE_URL", "NOT FOUND"))
+print("DEBUG ALL ENV KEYS:", list(os.environ.keys()))
 
 app = FastAPI(
     title="Medivio",
