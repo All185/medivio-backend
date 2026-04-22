@@ -6,15 +6,15 @@ from app.auth.models import (
     AuthResponse, UserOut, TokenResponse
 )
 from app.auth.dependencies import get_current_user
+import os
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 # Client Supabase avec la clé service (admin) — jamais exposée au front
 supabase: Client = create_client(
-    settings.SUPABASE_URL,
-    settings.SUPABASE_SERVICE_ROLE_KEY
+    os.environ.get("SUPABASE_URL", ""),
+    os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
 )
-
 
 @router.post("/register", response_model=AuthResponse, status_code=201)
 async def register(body: RegisterRequest):

@@ -5,6 +5,7 @@ from app.auth.dependencies import get_current_user
 from app.payments.models import CheckoutCreate, CheckoutOut, WebhookResponse
 from supabase import create_client, Client
 import stripe
+import os 
 
 router = APIRouter(prefix="/payments", tags=["payments"])
 
