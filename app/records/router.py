@@ -1,10 +1,10 @@
+import os
 from fastapi import APIRouter, HTTPException, status, Depends
 from supabase import create_client, Client
 from app.config import settings
 from app.auth.models import UserOut, UserRole
 from app.auth.dependencies import get_current_user, require_doctor
 from app.records.models import RecordCreate, RecordUpdate, RecordOut
-import os 
 
 router = APIRouter(prefix="/records", tags=["records"])
 
