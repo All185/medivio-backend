@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter, HTTPException, status, Depends
 from supabase import create_client, Client
 from app.config import settings
@@ -6,8 +7,6 @@ from app.auth.models import (
     AuthResponse, UserOut, TokenResponse
 )
 from app.auth.dependencies import get_current_user
-import os
-
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 # Client Supabase avec la clé service (admin) — jamais exposée au front

@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter, HTTPException, status, Depends
 from app.config import settings
 from app.auth.models import UserOut
@@ -5,7 +6,6 @@ from app.auth.dependencies import get_current_user
 from app.triage.models import TriageRequest, TriageOut
 from supabase import create_client, Client
 from openai import AsyncOpenAI
-import os 
 
 router = APIRouter(prefix="/triage", tags=["triage"])
 
