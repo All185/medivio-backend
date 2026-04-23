@@ -1,26 +1,28 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.config import settings
 from app.auth.router import router as auth_router
 from app.appointments.router import router as appointments_router
 from app.video.router import router as video_router
 from app.payments.router import router as payments_router
 from app.triage.router import router as triage_router
 from app.records.router import router as records_router
-import os
-print("DEBUG SUPABASE_URL:", os.environ.get("SUPABASE_URL", "NOT FOUND"))
-print("DEBUG ALL ENV KEYS:", list(os.environ.keys()))
 
 app = FastAPI(
-    title="Medivio",
+    title="Medivio API",
     version="0.1.0",
-    docs_url="/docs" if settings.APP_ENV == "development" else None,
+    docs_url="/docs",
 )
 
-# CORS — autorise le front Next.js
+# CORS
+origins = [
+    "http://localhost:3000",
+    "https://medivio-frontend.vercel.app",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -37,8 +39,4 @@ app.include_router(records_router, prefix="/api/v1")
 
 @app.get("/")
 async def health():
-    return {"status": "ok", "env": settings.APP_ENV}
-
-
-# Lancement local :
-# uvicorn app.main:app --reload --port 8000
+    return {"status": "ok", "env": os.environ.get("APP_ENV", "development")}
