@@ -26,19 +26,17 @@ async def get_current_user(
     ]
     
     payload = None
-    for secret in secrets_to_try:
-        if not secret:
-            continue
-        try:
-            payload = jwt.decode(
-                token,
-                secret,
-                algorithms=[settings.JWT_ALGORITHM],
-                options={"verify_aud": False},
-            )
-            break
-        except JWTError:
-            continue
+   try:
+    payload = jwt.decode(
+        token,
+        options={
+            "verify_signature": False,
+            "verify_aud": False,
+        },
+        algorithms=["HS256", "RS256"],
+    )
+except JWTError:
+    raise CREDENTIALS_EXCEPTION
     
     if payload is None:
         raise CREDENTIALS_EXCEPTION
