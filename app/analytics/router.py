@@ -13,8 +13,9 @@ supabase = create_client(
 
 @router.get("/doctor/stats")
 async def get_doctor_stats(current_user: dict = Depends(get_current_user)):
-    if current_user.get("role") != "doctor":
-        raise HTTPException(status_code=403, detail="Accès réservé aux médecins")
+  role = current_user.get("role") or current_user.get("user_metadata", {}).get("role", "")
+if role != "doctor":
+    raise HTTPException(status_code=403, detail="Accès réservé aux médecins")
 
     doctor_id = current_user.get("id")
 
