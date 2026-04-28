@@ -19,6 +19,7 @@ async def get_current_user(
     try:
         payload = jwt.decode(
             token,
+            key="",
             options={
                 "verify_signature": False,
                 "verify_aud": False,
