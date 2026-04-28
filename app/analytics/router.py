@@ -13,9 +13,9 @@ supabase = create_client(
 
 @router.get("/doctor/stats")
 async def get_doctor_stats(current_user: dict = Depends(get_current_user)):
-    doctor_id = current_user.get("id") or current_user.get("sub")
-    if not doctor_id:
-        raise HTTPException(status_code=401, detail="Non autorisé")
+doctor_id = current_user.id
+if not doctor_id:
+    raise HTTPException(status_code=401, detail="Non autorisé")
 
     appointments = supabase.table("appointments").select("*").eq("doctor_id", doctor_id).execute()
     data = appointments.data or []
