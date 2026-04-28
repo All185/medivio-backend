@@ -3,7 +3,6 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import jwt, JWTError
 from app.config import settings
 from app.auth.models import UserOut, UserRole
-import os
 
 bearer_scheme = HTTPBearer()
 
@@ -17,28 +16,16 @@ async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
 ) -> UserOut:
     token = credentials.credentials
-    
-    # Essai avec JWT_SECRET
-    secrets_to_try = [
-        settings.JWT_SECRET,
-        os.environ.get("SUPABASE_JWT_SECRET", ""),
-        os.environ.get("SUPABASE_ANON_KEY", ""),
-    ]
-    
-    payload = None
-   try:
-    payload = jwt.decode(
-        token,
-        options={
-            "verify_signature": False,
-            "verify_aud": False,
-        },
-        algorithms=["HS256", "RS256"],
-    )
-except JWTError:
-    raise CREDENTIALS_EXCEPTION
-    
-    if payload is None:
+    try:
+        payload = jwt.decode(
+            token,
+            options={
+                "verify_signature": False,
+                "verify_aud": False,
+            },
+            algorithms=["HS256", "RS256"],
+        )
+    except JWTError:
         raise CREDENTIALS_EXCEPTION
 
     user_metadata = payload.get("user_metadata", {})
