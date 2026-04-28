@@ -1,0 +1,87 @@
+{
+    "nav": {
+      "logout": "Déconnexion"
+    },
+    "auth": {
+      "login": "Connexion",
+      "register": "Inscription",
+      "email": "Email",
+      "password": "Mot de passe",
+      "fullName": "Nom complet",
+      "role": "Rôle",
+      "patient": "Patient",
+      "doctor": "Médecin",
+      "loginButton": "Se connecter",
+      "registerButton": "S'inscrire",
+      "noAccount": "Pas encore de compte ?",
+      "hasAccount": "Déjà un compte ?",
+      "loading": "Chargement...",
+      "error": "Une erreur est survenue"
+    },
+    "dashboard": {
+      "appointments": "Mes rendez-vous",
+      "newAppointment": "+ Nouveau rendez-vous",
+      "noAppointments": "Aucun rendez-vous pour l'instant.",
+      "takeAppointment": "Prendre un rendez-vous",
+      "hello": "Bonjour",
+      "consultations": "Consultations du jour",
+      "noConsultations": "Aucune consultation pour l'instant.",
+      "confirm": "Confirmer",
+      "startConsultation": "Démarrer la consultation"
+    },
+    "appointments": {
+      "new": "Nouveau rendez-vous",
+      "doctorId": "ID du médecin",
+      "doctorPlaceholder": "UUID du médecin",
+      "doctorHint": "Entrez l'identifiant unique du médecin",
+      "dateTime": "Date et heure",
+      "confirmButton": "Confirmer le rendez-vous",
+      "creating": "Création en cours...",
+      "back": "← Retour au tableau de bord"
+    },
+    "triage": {
+      "title": "Triage IA",
+      "subtitle": "Décrivez vos symptômes avant la consultation. L'IA préparera un résumé pour votre médecin.",
+      "appointmentId": "ID du rendez-vous",
+      "symptoms": "Décrivez vos symptômes",
+      "symptomsPlaceholder": "Ex: Fièvre, maux de tête, fatigue...",
+      "duration": "Depuis combien de temps ?",
+      "durationPlaceholder": "Ex: 3 jours, 1 semaine...",
+      "severity": "Sévérité",
+      "mild": "Légère",
+      "severe": "Sévère",
+      "history": "Antécédents médicaux (optionnel)",
+      "historyPlaceholder": "Ex: Diabète, hypertension...",
+      "analyzeButton": "Analyser mes symptômes",
+      "analyzing": "Analyse en cours...",
+      "back": "← Retour au tableau de bord",
+      "summary": "Résumé clinique",
+      "recommendations": "Recommandations",
+      "urgencyLow": "Urgence faible",
+      "urgencyMedium": "Urgence modérée",
+      "urgencyHigh": "Urgence élevée"
+    },
+    "records": {
+      "title": "Dossiers médicaux",
+      "noRecords": "Aucun dossier médical pour l'instant.",
+      "back": "← Retour aux dossiers",
+      "date": "Date",
+      "diagnosis": "Diagnostic",
+      "prescription": "Prescription",
+      "notes": "Notes",
+      "see": "Voir →"
+    },
+    "video": {
+      "title": "Consultation",
+      "connecting": "Connexion à la salle...",
+      "quit": "← Quitter",
+      "error": "Erreur",
+      "backToDashboard": "Retour au tableau de bord"
+    },
+    "status": {
+      "pending": "En attente",
+      "confirmed": "Confirmé",
+      "cancelled": "Annulé",
+      "completed": "Terminé"
+    }
+  }

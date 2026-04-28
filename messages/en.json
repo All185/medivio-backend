@@ -1,0 +1,87 @@
+{
+    "nav": {
+      "logout": "Logout"
+    },
+    "auth": {
+      "login": "Login",
+      "register": "Register",
+      "email": "Email",
+      "password": "Password",
+      "fullName": "Full name",
+      "role": "Role",
+      "patient": "Patient",
+      "doctor": "Doctor",
+      "loginButton": "Sign in",
+      "registerButton": "Sign up",
+      "noAccount": "No account yet?",
+      "hasAccount": "Already have an account?",
+      "loading": "Loading...",
+      "error": "An error occurred"
+    },
+    "dashboard": {
+      "appointments": "My appointments",
+      "newAppointment": "+ New appointment",
+      "noAppointments": "No appointments yet.",
+      "takeAppointment": "Book an appointment",
+      "hello": "Hello",
+      "consultations": "Today's consultations",
+      "noConsultations": "No consultations yet.",
+      "confirm": "Confirm",
+      "startConsultation": "Start consultation"
+    },
+    "appointments": {
+      "new": "New appointment",
+      "doctorId": "Doctor ID",
+      "doctorPlaceholder": "Doctor UUID",
+      "doctorHint": "Enter the doctor's unique identifier",
+      "dateTime": "Date and time",
+      "confirmButton": "Confirm appointment",
+      "creating": "Creating...",
+      "back": "← Back to dashboard"
+    },
+    "triage": {
+      "title": "AI Triage",
+      "subtitle": "Describe your symptoms before the consultation. AI will prepare a summary for your doctor.",
+      "appointmentId": "Appointment ID",
+      "symptoms": "Describe your symptoms",
+      "symptomsPlaceholder": "E.g: Fever, headache, fatigue...",
+      "duration": "How long have you had them?",
+      "durationPlaceholder": "E.g: 3 days, 1 week...",
+      "severity": "Severity",
+      "mild": "Mild",
+      "severe": "Severe",
+      "history": "Medical history (optional)",
+      "historyPlaceholder": "E.g: Diabetes, hypertension...",
+      "analyzeButton": "Analyze my symptoms",
+      "analyzing": "Analyzing...",
+      "back": "← Back to dashboard",
+      "summary": "Clinical summary",
+      "recommendations": "Recommendations",
+      "urgencyLow": "Low urgency",
+      "urgencyMedium": "Moderate urgency",
+      "urgencyHigh": "High urgency"
+    },
+    "records": {
+      "title": "Medical records",
+      "noRecords": "No medical records yet.",
+      "back": "← Back to records",
+      "date": "Date",
+      "diagnosis": "Diagnosis",
+      "prescription": "Prescription",
+      "notes": "Notes",
+      "see": "View →"
+    },
+    "video": {
+      "title": "Consultation",
+      "connecting": "Connecting to room...",
+      "quit": "← Quit",
+      "error": "Error",
+      "backToDashboard": "Back to dashboard"
+    },
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "completed": "Completed"
+    }
+  }

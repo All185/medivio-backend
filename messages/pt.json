@@ -1,0 +1,87 @@
+{
+    "nav": {
+      "logout": "Sair"
+    },
+    "auth": {
+      "login": "Entrar",
+      "register": "Cadastrar",
+      "email": "E-mail",
+      "password": "Senha",
+      "fullName": "Nome completo",
+      "role": "Função",
+      "patient": "Paciente",
+      "doctor": "Médico",
+      "loginButton": "Entrar",
+      "registerButton": "Cadastrar-se",
+      "noAccount": "Não tem uma conta?",
+      "hasAccount": "Já tem uma conta?",
+      "loading": "Carregando...",
+      "error": "Ocorreu um erro"
+    },
+    "dashboard": {
+      "appointments": "Minhas consultas",
+      "newAppointment": "+ Nova consulta",
+      "noAppointments": "Nenhuma consulta por enquanto.",
+      "takeAppointment": "Agendar uma consulta",
+      "hello": "Olá",
+      "consultations": "Consultas de hoje",
+      "noConsultations": "Nenhuma consulta por enquanto.",
+      "confirm": "Confirmar",
+      "startConsultation": "Iniciar consulta"
+    },
+    "appointments": {
+      "new": "Nova consulta",
+      "doctorId": "ID do médico",
+      "doctorPlaceholder": "UUID do médico",
+      "doctorHint": "Digite o identificador único do médico",
+      "dateTime": "Data e hora",
+      "confirmButton": "Confirmar consulta",
+      "creating": "Criando...",
+      "back": "← Voltar ao painel"
+    },
+    "triage": {
+      "title": "Triagem IA",
+      "subtitle": "Descreva seus sintomas antes da consulta. A IA preparará um resumo para seu médico.",
+      "appointmentId": "ID da consulta",
+      "symptoms": "Descreva seus sintomas",
+      "symptomsPlaceholder": "Ex: Febre, dor de cabeça, fadiga...",
+      "duration": "Há quanto tempo?",
+      "durationPlaceholder": "Ex: 3 dias, 1 semana...",
+      "severity": "Gravidade",
+      "mild": "Leve",
+      "severe": "Grave",
+      "history": "Histórico médico (opcional)",
+      "historyPlaceholder": "Ex: Diabetes, hipertensão...",
+      "analyzeButton": "Analisar meus sintomas",
+      "analyzing": "Analisando...",
+      "back": "← Voltar ao painel",
+      "summary": "Resumo clínico",
+      "recommendations": "Recomendações",
+      "urgencyLow": "Urgência baixa",
+      "urgencyMedium": "Urgência moderada",
+      "urgencyHigh": "Urgência alta"
+    },
+    "records": {
+      "title": "Prontuários médicos",
+      "noRecords": "Nenhum prontuário médico por enquanto.",
+      "back": "← Voltar aos prontuários",
+      "date": "Data",
+      "diagnosis": "Diagnóstico",
+      "prescription": "Prescrição",
+      "notes": "Notas",
+      "see": "Ver →"
+    },
+    "video": {
+      "title": "Consulta",
+      "connecting": "Conectando à sala...",
+      "quit": "← Sair",
+      "error": "Erro",
+      "backToDashboard": "Voltar ao painel"
+    },
+    "status": {
+      "pending": "Pendente",
+      "confirmed": "Confirmado",
+      "cancelled": "Cancelado",
+      "completed": "Concluído"
+    }
+  }

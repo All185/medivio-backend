@@ -1,0 +1,87 @@
+{
+    "nav": {
+      "logout": "تسجيل الخروج"
+    },
+    "auth": {
+      "login": "تسجيل الدخول",
+      "register": "إنشاء حساب",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "fullName": "الاسم الكامل",
+      "role": "الدور",
+      "patient": "مريض",
+      "doctor": "طبيب",
+      "loginButton": "دخول",
+      "registerButton": "تسجيل",
+      "noAccount": "ليس لديك حساب؟",
+      "hasAccount": "لديك حساب بالفعل؟",
+      "loading": "جار التحميل...",
+      "error": "حدث خطأ"
+    },
+    "dashboard": {
+      "appointments": "مواعيدي",
+      "newAppointment": "+ موعد جديد",
+      "noAppointments": "لا توجد مواعيد حالياً.",
+      "takeAppointment": "حجز موعد",
+      "hello": "مرحباً",
+      "consultations": "استشارات اليوم",
+      "noConsultations": "لا توجد استشارات حالياً.",
+      "confirm": "تأكيد",
+      "startConsultation": "بدء الاستشارة"
+    },
+    "appointments": {
+      "new": "موعد جديد",
+      "doctorId": "معرف الطبيب",
+      "doctorPlaceholder": "UUID الطبيب",
+      "doctorHint": "أدخل المعرف الفريد للطبيب",
+      "dateTime": "التاريخ والوقت",
+      "confirmButton": "تأكيد الموعد",
+      "creating": "جار الإنشاء...",
+      "back": "→ العودة إلى لوحة التحكم"
+    },
+    "triage": {
+      "title": "الفرز بالذكاء الاصطناعي",
+      "subtitle": "صف أعراضك قبل الاستشارة. سيقوم الذكاء الاصطناعي بإعداد ملخص لطبيبك.",
+      "appointmentId": "معرف الموعد",
+      "symptoms": "صف أعراضك",
+      "symptomsPlaceholder": "مثال: حمى، صداع، تعب...",
+      "duration": "منذ متى وأنت تعاني منها؟",
+      "durationPlaceholder": "مثال: 3 أيام، أسبوع...",
+      "severity": "الشدة",
+      "mild": "خفيفة",
+      "severe": "شديدة",
+      "history": "التاريخ الطبي (اختياري)",
+      "historyPlaceholder": "مثال: السكري، ارتفاع ضغط الدم...",
+      "analyzeButton": "تحليل أعراضي",
+      "analyzing": "جار التحليل...",
+      "back": "→ العودة إلى لوحة التحكم",
+      "summary": "الملخص السريري",
+      "recommendations": "التوصيات",
+      "urgencyLow": "إلحاح منخفض",
+      "urgencyMedium": "إلحاح متوسط",
+      "urgencyHigh": "إلحاح عالٍ"
+    },
+    "records": {
+      "title": "السجلات الطبية",
+      "noRecords": "لا توجد سجلات طبية حالياً.",
+      "back": "→ العودة إلى السجلات",
+      "date": "التاريخ",
+      "diagnosis": "التشخيص",
+      "prescription": "الوصفة الطبية",
+      "notes": "ملاحظات",
+      "see": "← عرض"
+    },
+    "video": {
+      "title": "الاستشارة",
+      "connecting": "جار الاتصال بالغرفة...",
+      "quit": "→ خروج",
+      "error": "خطأ",
+      "backToDashboard": "العودة إلى لوحة التحكم"
+    },
+    "status": {
+      "pending": "في الانتظار",
+      "confirmed": "مؤكد",
+      "cancelled": "ملغى",
+      "completed": "مكتمل"
+    }
+  }

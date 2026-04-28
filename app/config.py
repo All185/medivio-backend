@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Settings:
     SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
@@ -13,7 +16,7 @@ class Settings:
     STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
     OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
     APP_ENV = os.environ.get("APP_ENV", "development")
-    CORS_ORIGINS = ["http://localhost:3000"]
+    CORS_ORIGINS =["http://localhost:3000", "http://127.0.0.1:3000", "https://medivio-frontend.vercel.app"]
 
 
 settings = Settings()
