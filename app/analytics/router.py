@@ -13,13 +13,12 @@ supabase = create_client(
 
 @router.get("/doctor/stats")
 async def get_doctor_stats(current_user: dict = Depends(get_current_user)):
-  role = current_user.get("role") or current_user.get("user_metadata", {}).get("role", "")
-if role != "doctor":
-    raise HTTPException(status_code=403, detail="Accès réservé aux médecins")
+    role = current_user.get("role") or current_user.get("user_metadata", {}).get("role", "")
+    if role != "doctor":
+        raise HTTPException(status_code=403, detail="Accès réservé aux médecins")
 
     doctor_id = current_user.get("id")
 
-    # Récupérer tous les rendez-vous du médecin
     appointments = supabase.table("appointments").select("*").eq("doctor_id", doctor_id).execute()
     data = appointments.data or []
 
@@ -29,12 +28,10 @@ if role != "doctor":
     cancelled = len([a for a in data if a["status"] == "cancelled"])
     pending = len([a for a in data if a["status"] == "pending"])
 
-    # Rendez-vous ce mois-ci
     now = datetime.now()
     first_day = now.replace(day=1).isoformat()
     this_month = len([a for a in data if a.get("scheduled_at", "") >= first_day])
 
-    # Rendez-vous cette semaine
     week_ago = (now - timedelta(days=7)).isoformat()
     this_week = len([a for a in data if a.get("scheduled_at", "") >= week_ago])
 
