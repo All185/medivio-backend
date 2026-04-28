@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.auth.router import get_current_user
+from app.auth.dependencies import get_current_user
 from supabase import create_client
 import os
 from datetime import datetime, timedelta
@@ -12,10 +12,10 @@ supabase = create_client(
 )
 
 @router.get("/doctor/stats")
-async def get_doctor_stats(current_user: dict = Depends(get_current_user)):
-doctor_id = current_user.id
-if not doctor_id:
-    raise HTTPException(status_code=401, detail="Non autorisé")
+async def get_doctor_stats(current_user=Depends(get_current_user)):
+    doctor_id = current_user.id
+    if not doctor_id:
+        raise HTTPException(status_code=401, detail="Non autorisé")
 
     appointments = supabase.table("appointments").select("*").eq("doctor_id", doctor_id).execute()
     data = appointments.data or []
