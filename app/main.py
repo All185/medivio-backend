@@ -9,6 +9,7 @@ from app.triage.router import router as triage_router
 from app.records.router import router as records_router
 from app.summary.router import router as summary_router
 from app.analytics.router import router as analytics_router
+from app.notifications.router import router as notifications_router
 
 app = FastAPI(
     title="Medivio API",
@@ -39,6 +40,7 @@ app.include_router(triage_router, prefix="/api/v1")
 app.include_router(records_router, prefix="/api/v1")
 app.include_router(summary_router, prefix="/api/v1")
 app.include_router(analytics_router, prefix="/api/v1")
+app.include_router(notifications_router, prefix="/api/v1")
 
 
 @app.get("/")
