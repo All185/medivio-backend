@@ -3,7 +3,7 @@ from supabase import create_client
 import os, json
 
 client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_SERVICE_KEY"))
+supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_SERVICE_ROLE_KEY"))
 
 async def analyze_emergency(symptoms: str, pain_level: int) -> dict:
     prompt = f"""Tu es un assistant médical d'orientation.
