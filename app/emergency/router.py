@@ -51,3 +51,11 @@ async def get_active_emergencies(user=Depends(get_current_user)):
         .order("created_at", desc=True)\
         .execute()
     return res.data
+    
+    @router.patch("/{emergency_id}/handled")
+async def mark_handled(emergency_id: str, user=Depends(get_current_user)):
+    supabase.table("emergencies")\
+        .update({"handled": True})\
+        .eq("id", emergency_id)\
+        .execute()
+    return {"success": True}
