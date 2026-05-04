@@ -15,4 +15,4 @@ async def add_points_endpoint(req: AddPointsRequest, user=Depends(get_current_us
 
 @router.get("/me")
 async def get_my_loyalty(user=Depends(get_current_user)):
-    return await get_loyalty(user["id"])
+    return await get_loyalty(user.id)
