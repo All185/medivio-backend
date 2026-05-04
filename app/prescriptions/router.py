@@ -49,5 +49,5 @@ async def verify(token: str):
     return result
 
 @router.patch("/dispense/{token}")
-async def dispense(token: str, user=Depends(get_current_user)):
+async def dispense(token: str):
     return await dispense_prescription(token)
