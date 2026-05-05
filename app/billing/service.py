@@ -18,7 +18,7 @@ def generate_invoice_number() -> str:
 async def get_patient_loyalty_discount(patient_id: str) -> float:
     res = supabase.table("loyalty_levels")\
         .select("level")\
-        .eq("patient_id", patient_id)\
+        .eq("patient_id", patient_id.strip())\
         .execute()
     if not res.data:
         return 0
@@ -34,7 +34,7 @@ async def create_invoice(doctor_id: str, patient_id: str, amount: float, descrip
     invoice = supabase.table("invoices").insert({
         "invoice_number": invoice_number,
         "doctor_id": doctor_id,
-        "patient_id": patient_id,
+        "patient_id": patient_id.strip(),
         "appointment_id": appointment_id,
         "amount": amount,
         "discount": discount_amount,
