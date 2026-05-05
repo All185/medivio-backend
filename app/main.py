@@ -14,6 +14,7 @@ from app.agenda.router import router as agenda_router
 from app.emergency.router import router as emergency_router
 from app.loyalty.router import router as loyalty_router
 from app.prescriptions.router import router as prescriptions_router
+from app.billing.router import router as billing_router
 
 app = FastAPI(
     title="Medivio API",
@@ -49,6 +50,7 @@ app.include_router(agenda_router, prefix="/api/v1")
 app.include_router(emergency_router)
 app.include_router(loyalty_router)
 app.include_router(prescriptions_router)
+app.include_router(billing_router)
 
 @app.get("/")
 async def health():
