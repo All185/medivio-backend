@@ -102,3 +102,41 @@ async def get_doctor_stats(doctor_id: str) -> dict:
         "paid_invoices": paid_invoices,
         "monthly_revenue": monthly_revenue,
     }
+
+async def generate_receipt(invoice_id: str) -> dict:
+    res = supabase.table("invoices").select("*").eq("id", invoice_id).execute()
+    if not res.data:
+        return {}
+    invoice = res.data[0]
+    
+    # Taux de remboursement standard Assurance Maladie
+    AM_RATE = 0.70  # 70% remboursé par l'AM
+    am_reimbursement = round(invoice["total"] * AM_RATE, 2)
+    patient_share = round(invoice["total"] - am_reimbursement, 2)
+
+    return {
+        "invoice_number": invoice["invoice_number"],
+        "description": invoice["description"],
+        "amount": invoice["amount"],
+        "discount": invoice["discount"],
+        "total": invoice["total"],
+        "currency": invoice["currency"],
+        "status": invoice["status"],
+        "created_at": invoice["created_at"],
+        "paid_at": invoice.get("paid_at"),
+        "am_reimbursement": am_reimbursement,
+        "patient_share": patient_share,
+        "am_rate": int(AM_RATE * 100),
+    }
+
+async def get_reimbursement_estimate(total: float) -> dict:
+    AM_RATE = 0.70
+    am_reimbursement = round(total * AM_RATE, 2)
+    patient_share = round(total - am_reimbursement, 2)
+    return {
+        "total": total,
+        "am_reimbursement": am_reimbursement,
+        "patient_share": patient_share,
+        "am_rate": 70,
+    }
+    
