@@ -17,7 +17,8 @@ QUESTIONNAIRES = {
 }
 
 async def triage_case(chief_complaint: str, answers: dict) -> dict:
-    prompt = f"""Tu es un assistant medical de triage.
+    try:
+        prompt = f"""Tu es un assistant medical de triage.
 Motif de consultation : {chief_complaint}
 Reponses questionnaire : {json.dumps(answers, ensure_ascii=False)}
 
@@ -33,13 +34,19 @@ Regles :
 - video = cas complexe necessitant examen visuel en temps reel
 - async = cas simple pouvant etre traite en differentiel
 """
-    response = await client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=300,
-        response_format={"type": "json_object"},
-    )
-    return json.loads(response.choices[0].message.content)
+        response = await client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=300,
+            response_format={"type": "json_object"},
+        )
+        return json.loads(response.choices[0].message.content)
+    except Exception:
+        return {
+            "triage_level": "async",
+            "triage_reason": "Triage automatique indisponible - dossier transmis au medecin.",
+            "ai_summary": f"Patient consulte pour : {chief_complaint}. Questionnaire complete. En attente d'analyse medicale.",
+        }
 
 async def create_case(patient_id: str, specialty: str, chief_complaint: str, symptoms: list, answers: dict) -> dict:
     triage = await triage_case(chief_complaint, answers)
