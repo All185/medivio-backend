@@ -58,7 +58,7 @@ app.include_router(senior_router)
 app.include_router(marketplace_router)
 app.include_router(chronic_router)
 app.include_router(async_care_router)
-app.include_router(waiting_router)
+app.include_router(waiting_router, prefix="/api/v1")
 
 @app.get("/")
 async def health():
