@@ -50,5 +50,6 @@ async def update_status(entry_id: str, data: UpdateStatus, user=Depends(get_curr
 
 @router.delete("/leave")
 async def leave_waiting_room(user=Depends(get_current_user)):
+    print(f"LEAVE appelé par user: {user.id}")
     supabase.table("waiting_room").update({"status": "done"}).eq("patient_id", user.id).eq("status", "waiting").execute()
     return {"message": "Vous avez quitté la salle d'attente"}
