@@ -1,8 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from typing import Optional
+import os
+from supabase import create_client
 from app.auth.dependencies import get_current_user
-from app.config import supabase
+
+supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_SERVICE_ROLE_KEY"))
 
 router = APIRouter(prefix="/waiting", tags=["waiting"])
 
@@ -17,7 +20,6 @@ class UpdateStatus(BaseModel):
 
 @router.post("/join")
 async def join_waiting_room(data: JoinWaitingRoom, user=Depends(get_current_user)):
-    # Vérifier si déjà en salle d'attente
     existing = supabase.table("waiting_room").select("*").eq("patient_id", user["id"]).eq("status", "waiting").execute()
     if existing.data:
         return existing.data[0]
@@ -35,7 +37,7 @@ async def join_waiting_room(data: JoinWaitingRoom, user=Depends(get_current_user
 
 @router.get("/list")
 async def list_waiting_room(user=Depends(get_current_user)):
-    result = supabase.table("waiting_room").select("*, appointments(scheduled_at, notes)").eq("status", "waiting").order("joined_at").execute()
+    result = supabase.table("waiting_room").select("*").eq("status", "waiting").order("joined_at").execute()
     return result.data
 
 @router.patch("/{entry_id}/status")
