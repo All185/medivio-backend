@@ -42,11 +42,33 @@ async def list_waiting_room(user=Depends(get_current_user)):
 
 @router.patch("/{entry_id}/status")
 async def update_status(entry_id: str, data: UpdateStatus, user=Depends(get_current_user)):
+    # Récupère l'entrée salle d'attente
+    entry = supabase.table("waiting_room").select("*").eq("id", entry_id).execute()
+    if not entry.data:
+        raise HTTPException(status_code=404, detail="Entrée introuvable")
+    
+    waiting_entry = entry.data[0]
+    appointment_id = waiting_entry.get("appointment_id")
+
+    # Si pas de rendez-vous, en créer un automatiquement
+    if data.status == "in_consultation" and not appointment_id:
+        from datetime import datetime, timezone
+        new_apt = supabase.table("appointments").insert({
+            "patient_id": waiting_entry["patient_id"],
+            "doctor_id": user.id,
+            "scheduled_at": datetime.now(timezone.utc).isoformat(),
+            "status": "confirmed",
+        }).execute()
+        appointment_id = new_apt.data[0]["id"]
+
+    # Met à jour le statut
     result = supabase.table("waiting_room").update({
         "status": data.status,
-        "doctor_id": user.id
+        "doctor_id": user.id,
+        "appointment_id": appointment_id
     }).eq("id", entry_id).execute()
-    return result.data[0]
+
+    return {**result.data[0], "appointment_id": appointment_id}
 
 @router.delete("/leave")
 async def leave_waiting_room(user=Depends(get_current_user)):
