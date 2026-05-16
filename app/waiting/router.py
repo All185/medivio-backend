@@ -20,12 +20,12 @@ class UpdateStatus(BaseModel):
 
 @router.post("/join")
 async def join_waiting_room(data: JoinWaitingRoom, user=Depends(get_current_user)):
-    existing = supabase.table("waiting_room").select("*").eq("patient_id", user["id"]).eq("status", "waiting").execute()
+    existing = supabase.table("waiting_room").select("*").eq("patient_id", user.id).eq("status", "waiting").execute()
     if existing.data:
         return existing.data[0]
 
     result = supabase.table("waiting_room").insert({
-        "patient_id": user["id"],
+        "patient_id": user.id,
         "appointment_id": data.appointment_id,
         "symptoms": data.symptoms,
         "pain_level": data.pain_level,
@@ -44,11 +44,11 @@ async def list_waiting_room(user=Depends(get_current_user)):
 async def update_status(entry_id: str, data: UpdateStatus, user=Depends(get_current_user)):
     result = supabase.table("waiting_room").update({
         "status": data.status,
-        "doctor_id": user["id"]
+        "doctor_id": user.id
     }).eq("id", entry_id).execute()
     return result.data[0]
 
 @router.delete("/leave")
 async def leave_waiting_room(user=Depends(get_current_user)):
-    supabase.table("waiting_room").update({"status": "done"}).eq("patient_id", user["id"]).eq("status", "waiting").execute()
+    supabase.table("waiting_room").update({"status": "done"}).eq("patient_id", user.id).eq("status", "waiting").execute()
     return {"message": "Vous avez quitté la salle d'attente"}
