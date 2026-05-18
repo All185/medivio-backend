@@ -35,6 +35,13 @@ async def join_waiting_room(data: JoinWaitingRoom, user=Depends(get_current_user
 
     return result.data[0]
 
+@router.get("/my-status")
+async def get_my_status(user=Depends(get_current_user)):
+    result = supabase.table("waiting_room").select("*").eq("patient_id", user.id).order("joined_at", desc=True).limit(1).execute()
+    if result.data:
+        return result.data[0]
+    return None
+
 @router.get("/list")
 async def list_waiting_room(user=Depends(get_current_user)):
     result = supabase.table("waiting_room").select("*").eq("status", "waiting").order("joined_at").execute()
