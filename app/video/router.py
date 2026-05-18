@@ -43,12 +43,19 @@ async def create_room(
             json=room_payload,
         )
 
-        if room_res.status_code != 200:
+        if room_res.status_code == 200:
+            room = room_res.json()
+        elif room_res.status_code == 409:
+            get_res = await client.get(
+                f"{DAILY_API_URL}/rooms/appointment-{body.appointment_id}",
+                headers=headers,
+            )
+            room = get_res.json()
+        else:
             raise HTTPException(
                 status.HTTP_400_BAD_REQUEST,
                 detail="Erreur création salle Daily.co"
             )
-
         room = room_res.json()
 
         # Générer un token pour l'utilisateur
