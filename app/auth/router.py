@@ -92,3 +92,23 @@ def _build_auth_response(res) -> AuthResponse:
             expires_in=session.expires_in,
         )
     )
+
+@router.get("/patients/search")
+async def search_patients(q: str, user=Depends(get_current_user)):
+    from supabase import create_client
+    import os
+    supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_SERVICE_ROLE_KEY"))
+    res = supabase.auth.admin.list_users()
+    users = res if isinstance(res, list) else getattr(res, 'users', [])
+    results = []
+    for u in users:
+        meta = u.user_metadata or {}
+        full_name = meta.get('full_name', '') or ''
+        email = u.email or ''
+        if q.lower() in full_name.lower() or q.lower() in email.lower():
+            results.append({
+                "id": str(u.id),
+                "full_name": full_name or email,
+                "email": email,
+            })
+    return results[:10]
