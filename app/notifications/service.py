@@ -6,7 +6,7 @@ resend.api_key = os.environ.get("RESEND_API_KEY")
 def send_appointment_confirmation(patient_email: str, patient_name: str, doctor_name: str, scheduled_at: str):
     try:
         resend.Emails.send({
-            "from": "Medivio <onboarding@resend.dev>",
+            "from": "Medivio <contact@medivio.care>",
             "to": patient_email,
             "subject": "Confirmation de votre rendez-vous — Medivio",
             "html": f"""
@@ -41,7 +41,7 @@ def send_appointment_confirmation(patient_email: str, patient_name: str, doctor_
 def send_appointment_reminder(patient_email: str, patient_name: str, doctor_name: str, scheduled_at: str):
     try:
         resend.Emails.send({
-            "from": "Medivio <onboarding@resend.dev>",
+            "from": "Medivio <contact@medivio.care>",
             "to": patient_email,
             "subject": "Rappel — Votre consultation Medivio dans 1 heure",
             "html": f"""
