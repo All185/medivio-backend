@@ -36,6 +36,16 @@ async def register(body: RegisterRequest):
     if not res.user:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Inscription échouée")
 
+    # Si médecin, enregistrer la date de début d'essai
+    if body.role.value == "doctor":
+        try:
+            from datetime import datetime, timezone
+            supabase.table("specialist_profiles").update({
+                "trial_start_date": datetime.now(timezone.utc).isoformat()
+            }).eq("user_id", str(res.user.id)).execute()
+        except Exception as e:
+            print(f"Erreur trial_start_date: {e}")
+
     return _build_auth_response(res)
 
 
