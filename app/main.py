@@ -21,6 +21,7 @@ from app.async_care.router import router as async_care_router
 from app.waiting.router import router as waiting_router
 from app.contact.router import router as contact_router
 from app.trial.router import router as trial_router
+from app.patients.router import router as patients_router
 
 app = FastAPI(
     title="Medivio API",
@@ -63,6 +64,7 @@ app.include_router(async_care_router)
 app.include_router(waiting_router, prefix="/api/v1")
 app.include_router(contact_router, prefix="/api/v1")
 app.include_router(trial_router, prefix="/api/v1")
+app.include_router(patients_router, prefix="/api/v1")
 
 @app.get("/")
 async def health():
