@@ -8,8 +8,6 @@ class UserRole(str, Enum):
     doctor  = "doctor"
 
 
-# ── Requêtes entrantes ────────────────────────────
-
 class RegisterRequest(BaseModel):
     email:    EmailStr
     password: str
@@ -22,7 +20,14 @@ class LoginRequest(BaseModel):
     password: str
 
 
-# ── Réponses sortantes ────────────────────────────
+class DoctorRequestIn(BaseModel):
+    first_name: str
+    last_name:  str
+    email:      EmailStr
+    specialty:  str
+    rpps:       str
+    cabinet:    Optional[str] = None
+
 
 class TokenResponse(BaseModel):
     access_token:  str
