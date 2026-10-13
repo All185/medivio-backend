@@ -1,4 +1,3 @@
-# app/auth/dependencies.py
 import jwt
 from jwt import PyJWKClient, ExpiredSignatureError, InvalidTokenError
 from fastapi import Depends, HTTPException, status
@@ -31,9 +30,8 @@ async def get_current_user(
         payload = jwt.decode(
             token,
             signing_key.key,
-            algorithms=["RS256"],
-            options={"verify_aud": False},
-            issuer=f"{settings.SUPABASE_URL}/auth/v1",
+            algorithms=["ES256"],
+            options={"verify_aud": False, "verify_iss": False},
         )
     except ExpiredSignatureError:
         raise HTTPException(
