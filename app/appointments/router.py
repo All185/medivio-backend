@@ -36,6 +36,7 @@ async def create_appointment(
 
 
 @router.get("")
+@router.get("", response_model=list[AppointmentOut])
 @router.get("/", response_model=list[AppointmentOut])
 async def list_appointments(
     current_user: UserOut = Depends(get_current_user)
@@ -55,7 +56,26 @@ async def list_appointments(
     except Exception as e:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail=str(e))
 
-    return res.data
+    appointments = res.data
+
+    # Enrichir avec le nom du médecin (uniquement pour les patients)
+    if current_user.role == UserRole.patient and appointments:
+        doctor_ids = list({apt["doctor_id"] for apt in appointments})
+        doctor_names: dict[str, str] = {}
+        for doctor_id in doctor_ids:
+            try:
+                user_res = supabase.auth.admin.get_user_by_id(doctor_id)
+                if user_res and user_res.user:
+                    meta = user_res.user.user_metadata or {}
+                    name = meta.get("full_name") or ""
+                    if name:
+                        doctor_names[doctor_id] = name
+            except Exception:
+                pass
+        for apt in appointments:
+            apt["doctor_name"] = doctor_names.get(apt["doctor_id"])
+
+    return appointments
 
 
 @router.get("/{appointment_id}", response_model=AppointmentOut)

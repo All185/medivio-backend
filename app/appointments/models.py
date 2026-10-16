@@ -15,6 +15,7 @@ class AppointmentStatus(str, Enum):
 
 class AppointmentCreate(BaseModel):
     doctor_id:    str
+    doctor_name:  Optional[str] = None
     scheduled_at: datetime
 
 
@@ -29,6 +30,7 @@ class AppointmentOut(BaseModel):
     id:           str
     patient_id:   str
     doctor_id:    str
+    doctor_name:  Optional[str] = None
     scheduled_at: datetime
     status:       AppointmentStatus
     notes:        Optional[str] = None
