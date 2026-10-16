@@ -35,6 +35,7 @@ async def create_appointment(
     return res.data[0]
 
 
+@router.get("")
 @router.get("/", response_model=list[AppointmentOut])
 async def list_appointments(
     current_user: UserOut = Depends(get_current_user)

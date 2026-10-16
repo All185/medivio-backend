@@ -24,6 +24,9 @@ from app.trial.router import router as trial_router
 from app.patients.router import router as patients_router
 
 app = FastAPI(
+    redirect_slashes=False,
+
+
     title="Medivio API",
     version="0.1.0",
     docs_url="/docs",
