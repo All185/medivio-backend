@@ -31,7 +31,8 @@ async def get_current_user(
             token,
             signing_key.key,
             algorithms=["ES256"],
-            options={"verify_aud": False, "verify_iss": False},
+            audience="authenticated",
+            issuer=f"{settings.SUPABASE_URL}/auth/v1",
         )
     except ExpiredSignatureError:
         raise HTTPException(
