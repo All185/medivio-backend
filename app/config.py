@@ -15,6 +15,7 @@ class Settings:
     STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY", "")
     STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
     OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+    MISTRAL_API_KEY = os.environ.get("MISTRAL_API_KEY", "")
     APP_ENV = os.environ.get("APP_ENV", "development")
     CORS_ORIGINS =["http://localhost:3000", "http://127.0.0.1:3000", "https://medivio-frontend.vercel.app", "https://medivio.care", "https://www.medivio.care"]
 

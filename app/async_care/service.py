@@ -1,12 +1,12 @@
 from supabase import create_client
-from openai import AsyncOpenAI
+from mistralai import Mistral
 import os
 import json
 from datetime import datetime
-
+ 
 supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_SERVICE_ROLE_KEY"))
-client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
+client = Mistral(api_key=os.getenv("MISTRAL_API_KEY"))
+ 
 QUESTIONNAIRES = {
     "Dermatologie": ["Depuis combien de temps ?", "La lesion s'etend-elle ?", "Y a-t-il des demangeaisons ?", "Avez-vous de la fievre ?", "Avez-vous des allergies connues ?"],
     "Cardiologie": ["Avez-vous des douleurs thoraciques ?", "Avez-vous des palpitations ?", "Etes-vous essoufle au repos ?", "Avez-vous des antecedents cardiaques ?"],
@@ -15,27 +15,27 @@ QUESTIONNAIRES = {
     "Psychiatrie": ["Depuis combien de temps ressentez-vous cela ?", "Dormez-vous normalement ?", "Avez-vous des pensees envahissantes ?", "Prenez-vous un traitement ?"],
     "default": ["Depuis combien de temps ?", "Intensite de 1 a 10 ?", "Avez-vous de la fievre ?", "Prenez-vous des medicaments ?", "Avez-vous des allergies ?"],
 }
-
+ 
 async def triage_case(chief_complaint: str, answers: dict) -> dict:
     try:
         prompt = f"""Tu es un assistant medical de triage.
 Motif de consultation : {chief_complaint}
 Reponses questionnaire : {json.dumps(answers, ensure_ascii=False)}
-
+ 
 Reponds UNIQUEMENT en JSON valide :
 {{
   "triage_level": "async" | "video" | "emergency",
   "triage_reason": "explication courte (1 phrase)",
   "ai_summary": "resume clinique structure en 2-3 phrases pour le medecin"
 }}
-
+ 
 Regles :
 - emergency = danger vital immediat
 - video = cas complexe necessitant examen visuel en temps reel
 - async = cas simple pouvant etre traite en differentiel
 """
-        response = await client.chat.completions.create(
-            model="gpt-4o-mini",
+        response = await client.chat.complete_async(
+            model="mistral-small-latest",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=300,
             response_format={"type": "json_object"},
@@ -47,10 +47,10 @@ Regles :
             "triage_reason": "Triage automatique indisponible - dossier transmis au medecin.",
             "ai_summary": f"Patient consulte pour : {chief_complaint}. Questionnaire complete. En attente d'analyse medicale.",
         }
-
+ 
 async def create_case(patient_id: str, specialty: str, chief_complaint: str, symptoms: list, answers: dict) -> dict:
     triage = await triage_case(chief_complaint, answers)
-
+ 
     res = supabase.table("async_cases").insert({
         "patient_id": patient_id,
         "specialty": specialty,
@@ -62,9 +62,9 @@ async def create_case(patient_id: str, specialty: str, chief_complaint: str, sym
         "ai_summary": triage["ai_summary"],
         "status": "pending",
     }).execute()
-
+ 
     return res.data[0]
-
+ 
 async def get_patient_cases(patient_id: str) -> list:
     res = supabase.table("async_cases")\
         .select("*")\
@@ -72,7 +72,7 @@ async def get_patient_cases(patient_id: str) -> list:
         .order("created_at", desc=True)\
         .execute()
     return res.data
-
+ 
 async def get_doctor_cases(doctor_id: str) -> list:
     res = supabase.table("async_cases")\
         .select("*")\
@@ -80,7 +80,7 @@ async def get_doctor_cases(doctor_id: str) -> list:
         .order("created_at", desc=True)\
         .execute()
     return res.data
-
+ 
 async def get_case(case_id: str) -> dict | None:
     res = supabase.table("async_cases")\
         .select("*")\
@@ -96,7 +96,7 @@ async def get_case(case_id: str) -> dict | None:
         .execute()
     case["messages"] = messages.data
     return case
-
+ 
 async def respond_to_case(case_id: str, doctor_id: str, response: str) -> dict:
     supabase.table("async_cases").update({
         "doctor_id": doctor_id,
@@ -104,22 +104,22 @@ async def respond_to_case(case_id: str, doctor_id: str, response: str) -> dict:
         "status": "answered",
         "answered_at": datetime.now().isoformat(),
     }).eq("id", case_id).execute()
-
+ 
     supabase.table("async_messages").insert({
         "case_id": case_id,
         "sender_id": doctor_id,
         "sender_role": "doctor",
         "message": response,
     }).execute()
-
+ 
     return {"success": True}
-
+ 
 async def escalate_case(case_id: str) -> dict:
     res = supabase.table("async_cases")\
         .update({"status": "escalated", "triage_level": "video"})\
         .eq("id", case_id)\
         .execute()
     return res.data[0] if res.data else {}
-
+ 
 def get_questionnaire(specialty: str) -> list:
     return QUESTIONNAIRES.get(specialty, QUESTIONNAIRES["default"])
