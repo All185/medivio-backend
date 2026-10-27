@@ -1,15 +1,15 @@
-import os
+import json
 from fastapi import APIRouter, HTTPException, status, Depends
 from app.config import settings
 from app.auth.models import UserOut
 from app.auth.dependencies import get_current_user
 from app.triage.models import TriageRequest, TriageOut
 from supabase import create_client, Client
-from openai import AsyncOpenAI
+from mistralai import Mistral
 
 router = APIRouter(prefix="/triage", tags=["triage"])
 
-openai_client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
+mistral_client = Mistral(api_key=settings.MISTRAL_API_KEY)
 
 supabase: Client = create_client(
     settings.SUPABASE_URL,
@@ -39,8 +39,8 @@ Réponds en JSON avec exactement ces champs :
 Réponds UNIQUEMENT avec le JSON, sans texte autour."""
 
     try:
-        response = await openai_client.chat.completions.create(
-            model="gpt-3.5-turbo",
+        response = await mistral_client.chat.complete_async(
+            model="mistral-small-latest",
             messages=[
                 {
                     "role":    "system",
@@ -57,16 +57,14 @@ Réponds UNIQUEMENT avec le JSON, sans texte autour."""
     except Exception as e:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail=str(e))
 
-    import json
     try:
         result = json.loads(response.choices[0].message.content)
     except Exception:
         raise HTTPException(
             status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Erreur de parsing de la réponse OpenAI"
+            detail="Erreur de parsing de la réponse Mistral"
         )
 
-    # Sauvegarder le triage dans Supabase
     supabase.table("appointments").update({
         "notes": f"TRIAGE IA:\n{result['summary']}\nUrgence: {result['urgency_level']}\n{result['recommendations']}"
     }).eq("id", body.appointment_id).execute()
