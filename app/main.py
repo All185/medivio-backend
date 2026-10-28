@@ -22,6 +22,7 @@ from app.waiting.router import router as waiting_router
 from app.contact.router import router as contact_router
 from app.trial.router import router as trial_router
 from app.patients.router import router as patients_router
+from app.audit.router import router as audit_router
 
 app = FastAPI(
     redirect_slashes=False,
@@ -68,6 +69,7 @@ app.include_router(waiting_router, prefix="/api/v1")
 app.include_router(contact_router, prefix="/api/v1")
 app.include_router(trial_router, prefix="/api/v1")
 app.include_router(patients_router, prefix="/api/v1")
+app.include_router(audit_router, prefix="/api/v1")
 
 @app.get("/")
 async def health():
