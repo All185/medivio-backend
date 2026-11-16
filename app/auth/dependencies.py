@@ -1,12 +1,15 @@
 import jwt
 from jwt import PyJWKClient, ExpiredSignatureError, InvalidTokenError
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from typing import Optional
 from app.config import settings
 from app.auth.models import UserOut, UserRole
 from functools import lru_cache
 
-bearer_scheme = HTTPBearer()
+# auto_error=False : ne lève pas d'erreur si le header Authorization est absent
+# (le cookie peut suffire)
+bearer_scheme = HTTPBearer(auto_error=False)
 
 CREDENTIALS_EXCEPTION = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
@@ -21,9 +24,19 @@ def get_jwks_client() -> PyJWKClient:
     return PyJWKClient(JWKS_URL, cache_keys=True)
 
 async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    request: Request,
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
 ) -> UserOut:
-    token = credentials.credentials
+    # Priorité 1 : cookie httpOnly (invisible au JS, plus sécurisé)
+    token: Optional[str] = request.cookies.get("access_token")
+
+    # Priorité 2 : header Authorization (fallback pendant la transition)
+    if not token and credentials:
+        token = credentials.credentials
+
+    if not token:
+        raise CREDENTIALS_EXCEPTION
+
     try:
         jwks_client = get_jwks_client()
         signing_key = jwks_client.get_signing_key_from_jwt(token)

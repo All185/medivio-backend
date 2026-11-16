@@ -62,11 +62,18 @@ async def verify(token: str):
     return result
 
 @router.patch("/dispense/{token}")
-async def dispense(token: str, request: Request, supabase: Client = Depends(get_supabase)):
+async def dispense(
+    token: str,
+    request: Request,
+    # Authentification obligatoire — un utilisateur anonyme ne peut pas dispenser
+    user=Depends(get_current_user),
+    supabase: Client = Depends(get_supabase),
+):
     result = await dispense_prescription(token)
     await log_action(
         supabase=supabase,
-        user_id="pharmacist",
+        # On logue le vrai ID de l'utilisateur authentifié, pas un placeholder
+        user_id=str(user.id),
         action="UPDATE",
         table_name="prescriptions",
         new_data={"token": token, "status": "dispensed"},

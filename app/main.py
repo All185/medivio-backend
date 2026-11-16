@@ -23,20 +23,27 @@ from app.contact.router import router as contact_router
 from app.trial.router import router as trial_router
 from app.patients.router import router as patients_router
 from app.audit.router import router as audit_router
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from app.limiter import limiter
 
 app = FastAPI(
     redirect_slashes=False,
-
-
     title="Medivio API",
     version="0.1.0",
     docs_url="/docs",
 )
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# CORS
+# CORS — origines explicitement autorisées (allow_credentials=True exige une liste précise,
+# jamais allow_origins=["*"] avec des cookies)
+_extra = os.environ.get("CORS_EXTRA_ORIGINS", "")
 origins = [
     "http://localhost:3000",
+    "https://medivio.care",
     "https://medivio-frontend.vercel.app",
+    *[o.strip() for o in _extra.split(",") if o.strip()],
 ]
 
 app.add_middleware(
@@ -48,16 +55,16 @@ app.add_middleware(
 )
 
 # Modules
-app.include_router(auth_router, prefix="/api/v1")
-app.include_router(appointments_router, prefix="/api/v1")
-app.include_router(video_router, prefix="/api/v1")
-app.include_router(payments_router, prefix="/api/v1")
-app.include_router(triage_router, prefix="/api/v1")
-app.include_router(records_router, prefix="/api/v1")
-app.include_router(summary_router, prefix="/api/v1")
-app.include_router(analytics_router, prefix="/api/v1")
+app.include_router(auth_router,          prefix="/api/v1")
+app.include_router(appointments_router,  prefix="/api/v1")
+app.include_router(video_router,         prefix="/api/v1")
+app.include_router(payments_router,      prefix="/api/v1")
+app.include_router(triage_router,        prefix="/api/v1")
+app.include_router(records_router,       prefix="/api/v1")
+app.include_router(summary_router,       prefix="/api/v1")
+app.include_router(analytics_router,     prefix="/api/v1")
 app.include_router(notifications_router, prefix="/api/v1")
-app.include_router(agenda_router, prefix="/api/v1")
+app.include_router(agenda_router,        prefix="/api/v1")
 app.include_router(emergency_router)
 app.include_router(prescriptions_router)
 app.include_router(billing_router)
@@ -65,11 +72,11 @@ app.include_router(senior_router)
 app.include_router(marketplace_router)
 app.include_router(chronic_router)
 app.include_router(async_care_router)
-app.include_router(waiting_router, prefix="/api/v1")
-app.include_router(contact_router, prefix="/api/v1")
-app.include_router(trial_router, prefix="/api/v1")
-app.include_router(patients_router, prefix="/api/v1")
-app.include_router(audit_router, prefix="/api/v1")
+app.include_router(waiting_router,       prefix="/api/v1")
+app.include_router(contact_router,       prefix="/api/v1")
+app.include_router(trial_router,         prefix="/api/v1")
+app.include_router(patients_router,      prefix="/api/v1")
+app.include_router(audit_router,         prefix="/api/v1")
 
 @app.get("/")
 async def health():

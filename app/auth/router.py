@@ -1,7 +1,8 @@
 import os
 import secrets
 from datetime import datetime, timezone
-from fastapi import APIRouter, HTTPException, status, Depends, Query
+from fastapi import APIRouter, HTTPException, Request, status, Depends, Query, Response
+from app.limiter import limiter
 from supabase import create_client, Client
 from app.config import settings
 from app.auth.models import (
@@ -24,8 +25,21 @@ supabase: Client = create_client(
 )
 
 
+def _set_auth_cookie(response: Response, token: str, expires_in: int) -> None:
+    """Pose un httpOnly cookie — le navigateur l'envoie automatiquement sur chaque requête."""
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        secure=True,
+        samesite="strict",
+        max_age=expires_in,
+        path="/",
+    )
+
+
 @router.post("/register", response_model=AuthResponse, status_code=201)
-async def register(body: RegisterRequest):
+async def register(body: RegisterRequest, response: Response):
     try:
         res = supabase.auth.sign_up({
             "email":    body.email,
@@ -33,7 +47,9 @@ async def register(body: RegisterRequest):
             "options": {
                 "data": {
                     "full_name": body.full_name,
-                    "role":      body.role.value,
+                    # Rôle toujours "patient" — l'escalade de privilège via ce champ est impossible.
+                    # L'accès médecin passe uniquement par /auth/approve (flux admin).
+                    "role": "patient",
                 }
             }
         })
@@ -43,15 +59,9 @@ async def register(body: RegisterRequest):
     if not res.user:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Inscription echouee")
 
-    if body.role.value == "doctor":
-        try:
-            supabase.table("specialist_profiles").update({
-                "trial_start_date": datetime.now(timezone.utc).isoformat()
-            }).eq("user_id", str(res.user.id)).execute()
-        except Exception as e:
-            print(f"Erreur trial_start_date: {e}")
-
-    return _build_auth_response(res)
+    auth_response = _build_auth_response(res)
+    _set_auth_cookie(response, auth_response.token.access_token, auth_response.token.expires_in)
+    return auth_response
 
 
 @router.post("/request-access", status_code=201)
@@ -219,7 +229,8 @@ async def reject_request(request_id: str, secret: str = Query(...)):
 
 
 @router.post("/login", response_model=AuthResponse)
-async def login(body: LoginRequest):
+@limiter.limit("5/15minutes")
+async def login(request: Request, body: LoginRequest, response: Response):
     try:
         res = supabase.auth.sign_in_with_password({
             "email":    body.email,
@@ -231,12 +242,14 @@ async def login(body: LoginRequest):
     if not res.user:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Non autorise")
 
-    return _build_auth_response(res)
-
+    auth_response = _build_auth_response(res)
+    _set_auth_cookie(response, auth_response.token.access_token, auth_response.token.expires_in)
+    return auth_response
 
 @router.post("/logout", status_code=204)
-async def logout(current_user: UserOut = Depends(get_current_user)):
+async def logout(response: Response, current_user: UserOut = Depends(get_current_user)):
     supabase.auth.sign_out()
+    response.delete_cookie(key="access_token", httponly=True, secure=True, samesite="strict", path="/")
     return
 
 
